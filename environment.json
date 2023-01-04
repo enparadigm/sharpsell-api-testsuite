@@ -1,0 +1,57 @@
+{
+	"id": "b54eed0c-fc37-4e04-a914-338f95af0b53",
+	"name": "Development",
+	"values": [
+		{
+			"key": "BASE-URL",
+			"value": "https://atbsegoln6.execute-api.ap-south-1.amazonaws.com/prod/core",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "Access-Token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IjZjYWRiN2I4LTc2MWQtMTFlZC1iNjE2LTVhM2I4NmFiMWE4ZWRlZmF1bHQiLCJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2NzA0MTEzMjYsImhhc3VyYSI6eyJjbGFpbXMiOnsieC1oYXN1cmEtYWxsb3dlZC1yb2xlcyI6WyJzaGFycHNlbGwtYWRtaW4iLCJtYW5hZ2VyIiwiY29tcGFueS1hZG1pbiIsInZjLXJldmlld2VyIiwiYXBwdXNlciJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJhcHB1c2VyIiwieC1oYXN1cmEtcm9sZSI6InNoYXJwc2VsbC1hZG1pbiIsIngtaGFzdXJhLXVzZXItaWQiOiIxIn19LCJwbGF0Zm9ybSI6IndlYiIsInJvbGUiOlsic2hhcnBzZWxsLWFkbWluIl0sInVzZXIiOnsiaWQiOjEsImZpcnN0X25hbWUiOiJTaGFycHNlbGwiLCJsYXN0X25hbWUiOiJBZG1pbiIsInNpZ25hdHVyZSI6bnVsbCwiZmNtIjpudWxsLCJhcG4iOm51bGwsIndlYl9mY20iOm51bGwsInByb2ZpbGVfaW1hZ2VfdXJsIjpudWxsLCJpc190ZXN0X3VzZXIiOnRydWUsImxvZ2luX2F0dGVtcHRzIjowLCJjb3VudHJ5X2NvZGUiOiIrOTEiLCJvbmJvYXJkX3N0YXR1cyI6ZmFsc2UsImFwcF9sYXN0X29wZW5lZF9hdCI6bnVsbCwiZGVzaWduYXRpb24iOm51bGwsInJlcG9ydGluZ190byI6bnVsbCwiZXh0ZXJuYWxfdW5pcXVlX2lkIjpudWxsLCJyZWdpc3RlcmVkX2F0IjoiMjAyMi0wOC0zMFQxNjowMDoyNi4zNDUyMjZaIiwiaXNfcmVnaXN0ZXJlZCI6ZmFsc2UsImlzX2FjdGl2ZSI6dHJ1ZSwiYXVkIjpudWxsLCJjb25maXJtZWRfYXQiOm51bGwsImludml0ZWRfYXQiOm51bGwsImVtYWlsIjoiYWRtaW5Ac2hhcnBzZWxsLmFpIiwiZW1haWxfZW5jcnlwdGVkIjpudWxsLCJlbWFpbF9jb25maXJtZWRfYXQiOm51bGwsImVtYWlsX3N0YXR1cyI6ZmFsc2UsImxhc3Rfc2lnbl9pbl9hdCI6IjIwMjItMTItMDdUMTA6Mzk6NTYuNjI0NzJaIiwidXNlcl9tZXRhX2RhdGEiOm51bGwsImlzX3N1cGVyX2FkbWluIjpudWxsLCJwaG9uZSI6bnVsbCwicGhvbmVfY29uZmlybWVkX2F0IjpudWxsLCJwaG9uZV9zdGF0dXMiOmZhbHNlLCJiYW5uZWRfYXQiOm51bGwsImJhbm5lZF91bnRpbCI6bnVsbCwiY3JlYXRlZF9hdCI6IjIwMjItMDgtMzBUMDk6MzM6MTkuMjkwNjY3WiIsInVwZGF0ZWRfYXQiOiIyMDIyLTEyLTA3VDEwOjM5OjU2LjYzNTQ1OVoiLCJyb2xlX2NvZGUiOlsic2hhcnBzZWxsLWFkbWluIl0sInVzZXJfbWV0YV9kYXRhX2pzb24iOm51bGx9fQ.vZVLHExDcaIom0P-tDcZZKICq6oIyMa44k-VgULwU_Q",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "Refresh-Token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzExNjI3NDUsInBsYXRmb3JtIjoiIiwicmVmcmVzaF91dWlkIjoiZGNlODdiNWEtN2NmMC0xMWVkLWI4ZDMtZWVkZWEyZDNjMzVkKys4MDFkM2E5Mi03YWMyLTExZWQtYjUyNS0wYWM3ZDFmNWZlMjQiLCJ1c2VyIjp7ImlkIjoiODAxZDNhOTItN2FjMi0xMWVkLWI1MjUtMGFjN2QxZjVmZTI0IiwiZmlyc3RfbmFtZSI6IlZpZ25lc2giLCJsYXN0X25hbWUiOiJKIiwicHJvZmlsZV9pbWFnZV91cmwiOiJodHRwczovL2ltZ3VyLmNvbS9UOUhhVXRuIiwiY291bnRyeV9jb2RlIjoiIiwiZGVzaWduYXRpb24iOiIiLCJyZXBvcnRpbmdfdG8iOm51bGwsImV4dGVybmFsX3VuaXF1ZV9pZCI6bnVsbCwiZW1haWwiOiJ2aWduZXNoLmJhYnVAc2hhcnBzZWxsLmFpIiwidXNlcl9tZXRhX2RhdGEiOm51bGwsInBob25lIjoiOTg4NjI3NDE0MCIsInJvbGVzIjpbInN1cGVyLWFkbWluIiwiYXBwLXVzZXIiXX19.I4tM3MlHzb1cGTe16Nas_uOqBt7DFOAr70ieQ_r9iI4",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "appuser_accesstoken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzExNjI5NjEsInBsYXRmb3JtIjoid2ViIiwicmVmcmVzaF91dWlkIjoiNWQ3ZDdkZjUtN2NmMS0xMWVkLWI4ZDMtZWVkZWEyZDNjMzVkKytmOTUxZDE4Yy03YWQ4LTExZWQtOWVkZi0wYWM3ZDFmNWZlMjQiLCJ1c2VyIjp7ImlkIjoiZjk1MWQxOGMtN2FkOC0xMWVkLTllZGYtMGFjN2QxZjVmZTI0IiwiZmlyc3RfbmFtZSI6IlZpZ25lc2giLCJsYXN0X25hbWUiOiJKIiwicHJvZmlsZV9pbWFnZV91cmwiOiJodHRwczovL2ltZ3VyLmNvbS9UOUhhVXRuIiwiY291bnRyeV9jb2RlIjoiIiwiZGVzaWduYXRpb24iOiIiLCJyZXBvcnRpbmdfdG8iOm51bGwsImV4dGVybmFsX3VuaXF1ZV9pZCI6bnVsbCwiZW1haWwiOiJqdmlnbmVzaGJhYnVAZ21haWwuY29tIiwidXNlcl9tZXRhX2RhdGEiOm51bGwsInBob25lIjoiOTYwNjMxNDc0OCIsInJvbGVzIjpbImFwcC11c2VyIl19fQ.mjlbefNSg1QeTY46Gr-kevQS5-BvkLQtW51MEHuUkRk",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "appuser_refreshtoken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzExNjI5NjEsInBsYXRmb3JtIjoid2ViIiwicmVmcmVzaF91dWlkIjoiNWQ3ZDdkZjUtN2NmMS0xMWVkLWI4ZDMtZWVkZWEyZDNjMzVkKytmOTUxZDE4Yy03YWQ4LTExZWQtOWVkZi0wYWM3ZDFmNWZlMjQiLCJ1c2VyIjp7ImlkIjoiZjk1MWQxOGMtN2FkOC0xMWVkLTllZGYtMGFjN2QxZjVmZTI0IiwiZmlyc3RfbmFtZSI6IlZpZ25lc2giLCJsYXN0X25hbWUiOiJKIiwicHJvZmlsZV9pbWFnZV91cmwiOiJodHRwczovL2ltZ3VyLmNvbS9UOUhhVXRuIiwiY291bnRyeV9jb2RlIjoiIiwiZGVzaWduYXRpb24iOiIiLCJyZXBvcnRpbmdfdG8iOm51bGwsImV4dGVybmFsX3VuaXF1ZV9pZCI6bnVsbCwiZW1haWwiOiJqdmlnbmVzaGJhYnVAZ21haWwuY29tIiwidXNlcl9tZXRhX2RhdGEiOm51bGwsInBob25lIjoiOTYwNjMxNDc0OCIsInJvbGVzIjpbImFwcC11c2VyIl19fQ.mjlbefNSg1QeTY46Gr-kevQS5-BvkLQtW51MEHuUkRk",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "jwt_token\n",
+			"value": "asd",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "jwt",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-01-04T05:44:51.859Z",
+	"_postman_exported_using": "Postman/10.6.7"
+}

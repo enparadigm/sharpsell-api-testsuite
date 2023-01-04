@@ -1,0 +1,1780 @@
+{
+	"info": {
+		"_postman_id": "c9044fc0-365f-4358-a574-b7acdc50e75e",
+		"name": "App User - Demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24074220"
+	},
+	"item": [
+		{
+			"name": "App User",
+			"item": [
+				{
+					"name": "Login Email OTP",
+					"item": [
+						{
+							"name": "Get Email OTP",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{kong-api-key}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{appuser_email}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE-URL}}/v1/get-otp",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"get-otp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"C11 Successful Admin Login\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+											"    ",
+											"    pm.environment.set(\"appuser_accesstoken\", pm.response.json().data.access_token);",
+											"    pm.environment.set(\"appuser_refreshtoken\", pm.response.json().data.refresh_token);",
+											"    console.log(pm.response.json().data.access_token);",
+											"});",
+											"",
+											"checkQueryParam();",
+											"",
+											"function checkQueryParam() {",
+											"",
+											"    if (pm.request.url.query.count() != 0) {",
+											"        const queryParamInclude = pm.request.url.query.idx(0).key;",
+											"        const tempVal = pm.request.url.query.idx(0).value;",
+											"        const queryParamIncludeVal = tempVal.split(',');",
+											"        const response = pm.response.json();",
+											"",
+											"        if (queryParamIncludeVal.includes(\"home_screen_layout\")) {",
+											"            pm.test (\"Expected Home Screen Layout\", function () {",
+											"                pm.expect(response.hasOwnProperty('home_screen_layout'));",
+											"                pm.expect(Object.keys(response.data.home_screen_layout)).to.not.equal(0);",
+											"            });",
+											"        }",
+											"",
+											"        if (queryParamIncludeVal.includes(\"active_plugins\")) {",
+											"            pm.test (\"Expected Active Plugins\", function () {",
+											"                pm.expect(response.hasOwnProperty('active_plugins'));",
+											"                pm.expect(Object.keys(response.data.active_plugins)).to.not.equal(0);",
+											"            });",
+											"        }",
+											"",
+											"        if (queryParamIncludeVal.includes(\"meta_rules\")) {",
+											"            pm.test (\"Expected User Meta Rules\", function () {",
+											"                pm.expect(response.hasOwnProperty('meta_rules'));",
+											"                pm.expect(Object.keys(response.data.meta_rules)).to.not.equal(0);",
+											"            });",
+											"        }",
+											"",
+											"        console.log (\"Key: \", queryParamInclude);",
+											"        console.log (\"Value: \", tempVal);",
+											"        console.log (\"Value Array: \", queryParamIncludeVal);",
+											"    }",
+											"    else {",
+											"        console.log (\"No Query Params\");",
+											"    }",
+											"}",
+											"",
+											"pm.test (\"Valid access token\", function() {",
+											"",
+											"    var jsonData = pm.response.json().data;",
+											"    pm.environment.set(\"jwt_token\", jsonData.access_token);",
+											"",
+											"    function parseJwt (token,part) {",
+											"    var base64Url = token.split('.')[part];",
+											"    var words = CryptoJS.enc.Base64.parse(base64Url);",
+											"    var jsonPayload = CryptoJS.enc.Utf8.stringify(words);",
+											"    return  JSON.parse(jsonPayload);",
+											"    };",
+											"",
+											"    var jwtInfo ={};",
+											"    jwtInfo.size = jsonData.access_token.length;",
+											"    jwtInfo.header = parseJwt(jsonData.access_token,0);",
+											"    jwtInfo.payload = parseJwt(jsonData.access_token,1);",
+											"    jwtInfo.signature = jsonData.access_token.split('.')[2];",
+											"    jwtInfo.expires = ((jwtInfo.payload.exp-Date.now().valueOf()/1000)/60).toFixed(1);",
+											"    console.log(jwtInfo);",
+											"",
+											"    pm.globals.set(\"decoded_Token\",jwtInfo);",
+											"    ",
+											"});",
+											"",
+											"pm.test (\"C11 User has the role app-user\", function () {",
+											"    var payload = pm.globals.get(\"decoded_Token\").payload.roles;",
+											"    pm.expect(payload).to.include(\"app-user\");",
+											"});",
+											"",
+											"pm.test (\"C11 Valid user object found in token\", function() {",
+											"    var user = pm.globals.get(\"decoded_Token\").payload.user;",
+											"    var expectedMob = pm.globals.get(\"appuser_mobile\");",
+											"    console.log(\"Mobile: \",expectedMob);",
+											"    pm.expect(user.phone).to.eql(expectedMob);",
+											"    pm.expect(user.email).to.eql(pm.globals.get(\"appuser_email\"));",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "platform",
+										"value": "web",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{appuser_email}}\",\n    \"otp\": \"654321\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE-URL}}/v1/login?include=home_screen_layout,active_plugins,meta_rules",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"login"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "home_screen_layout,active_plugins,meta_rules"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Login OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "apikey",
+												"value": "{{kong-api-key}}",
+												"type": "text"
+											},
+											{
+												"key": "platform",
+												"value": "web",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"admin@sharpsell.ai\",\n    \"password\": \"Test@123!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE-URL}}/v1/login",
+											"host": [
+												"{{BASE-URL}}"
+											],
+											"path": [
+												"v1",
+												"login"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "X-Correlation-Id",
+											"value": "bebef120-753d-11ed-9e08-18c04ddd82c1"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 06 Dec 2022 08:12:44 GMT"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"message\": \"user successfully login\",\n    \"data\": {\n        \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IiIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTY3MDUzMDM2NCwiaGFzdXJhIjp7ImNsYWltcyI6eyJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInN1cGVyLWFkbWluIiwiYXBwLXVzZXIiLCJlZGl0b3IiLCJhZG1pbiJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJhcHAtdXNlciIsIngtaGFzdXJhLXJvbGUiOiJzdXBlci1hZG1pbiIsIngtaGFzdXJhLXVzZXItaWQiOiIxIn19LCJwbGF0Zm9ybSI6IndlYiIsInJvbGUiOlsic3VwZXItYWRtaW4iXSwidXNlciI6eyJpZCI6MSwiZmlyc3RfbmFtZSI6IlNoYXJwc2VsbCIsImxhc3RfbmFtZSI6IkFkbWluIiwic2lnbmF0dXJlIjpudWxsLCJmY20iOm51bGwsImFwbiI6bnVsbCwid2ViX2ZjbSI6bnVsbCwicHJvZmlsZV9pbWFnZV91cmwiOm51bGwsImxvZ2luX2F0dGVtcHRzIjowLCJjb3VudHJ5X2NvZGUiOiIrOTEiLCJkZXNpZ25hdGlvbiI6bnVsbCwicmVwb3J0aW5nX3RvIjpudWxsLCJleHRlcm5hbF91bmlxdWVfaWQiOm51bGwsImlzX3JlZ2lzdGVyZWQiOmZhbHNlLCJpc19hY3RpdmUiOnRydWUsImludml0ZWRfYXQiOm51bGwsImVtYWlsIjoiYWRtaW5Ac2hhcnBzZWxsLmFpIiwiZW1haWxfY29uZmlybWVkX2F0IjpudWxsLCJsYXN0X3NpZ25faW5fYXQiOm51bGwsInVzZXJfbWV0YV9kYXRhIjpudWxsLCJwaG9uZSI6bnVsbCwicGhvbmVfY29uZmlybWVkX2F0IjpudWxsLCJiYW5uZWRfYXQiOm51bGwsImJhbm5lZF91bnRpbCI6bnVsbCwiY3JlYXRlZF9hdCI6IjIwMjItMTItMDZUMDg6MTI6MzMuNDgyODQ5WiIsInVwZGF0ZWRfYXQiOiIyMDIyLTEyLTA2VDA4OjEyOjMzLjQ4Mjg0OVoiLCJyb2xlX2NvZGUiOlsic3VwZXItYWRtaW4iXSwidXNlcl9tZXRhX2RhdGFfanNvbiI6bnVsbH19.Z8yAD_dMFse_QrYqW1xzFb6oMZYoR1EOWdvtNgc2uj8\",\n        \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzAzMTYxNjQsInBsYXRmb3JtIjoid2ViIiwicmVmcmVzaF91dWlkIjoiYzMxMmJhMjYtNzUzZC0xMWVkLTllMDgtMThjMDRkZGQ4MmMxKysxIiwidXNlciI6eyJpZCI6MSwiZmlyc3RfbmFtZSI6IlNoYXJwc2VsbCIsImxhc3RfbmFtZSI6IkFkbWluIiwic2lnbmF0dXJlIjpudWxsLCJmY20iOm51bGwsImFwbiI6bnVsbCwid2ViX2ZjbSI6bnVsbCwicHJvZmlsZV9pbWFnZV91cmwiOm51bGwsImxvZ2luX2F0dGVtcHRzIjowLCJjb3VudHJ5X2NvZGUiOiIrOTEiLCJkZXNpZ25hdGlvbiI6bnVsbCwicmVwb3J0aW5nX3RvIjpudWxsLCJleHRlcm5hbF91bmlxdWVfaWQiOm51bGwsImlzX3JlZ2lzdGVyZWQiOmZhbHNlLCJpc19hY3RpdmUiOnRydWUsImludml0ZWRfYXQiOm51bGwsImVtYWlsIjoiYWRtaW5Ac2hhcnBzZWxsLmFpIiwiZW1haWxfY29uZmlybWVkX2F0IjpudWxsLCJsYXN0X3NpZ25faW5fYXQiOm51bGwsInVzZXJfbWV0YV9kYXRhIjpudWxsLCJwaG9uZSI6bnVsbCwicGhvbmVfY29uZmlybWVkX2F0IjpudWxsLCJiYW5uZWRfYXQiOm51bGwsImJhbm5lZF91bnRpbCI6bnVsbCwiY3JlYXRlZF9hdCI6IjIwMjItMTItMDZUMDg6MTI6MzMuNDgyODQ5WiIsInVwZGF0ZWRfYXQiOiIyMDIyLTEyLTA2VDA4OjEyOjMzLjQ4Mjg0OVoiLCJyb2xlX2NvZGUiOlsic3VwZXItYWRtaW4iXSwidXNlcl9tZXRhX2RhdGFfanNvbiI6bnVsbH19.R0HYNaCzp_fbh2wwblakmoVw5tjuQdbwW0js3WiQVoM\",\n        \"user\": {\n            \"id\": 1,\n            \"first_name\": \"Sharpsell\",\n            \"last_name\": \"Admin\",\n            \"signature\": null,\n            \"fcm\": null,\n            \"apn\": null,\n            \"web_fcm\": null,\n            \"profile_image_url\": null,\n            \"login_attempts\": 0,\n            \"country_code\": \"+91\",\n            \"designation\": null,\n            \"reporting_to\": null,\n            \"external_unique_id\": null,\n            \"is_registered\": false,\n            \"is_active\": true,\n            \"invited_at\": null,\n            \"email\": \"admin@sharpsell.ai\",\n            \"email_confirmed_at\": null,\n            \"last_sign_in_at\": null,\n            \"user_meta_data\": null,\n            \"phone\": null,\n            \"phone_confirmed_at\": null,\n            \"banned_at\": null,\n            \"banned_until\": null,\n            \"created_at\": \"2022-12-06T08:12:33.482849Z\",\n            \"updated_at\": \"2022-12-06T08:12:33.482849Z\",\n            \"role_code\": [\n                \"super-admin\"\n            ],\n            \"user_meta_data_json\": null\n        }\n    }\n}"
+								},
+								{
+									"name": "Login 401 (wrong password Unauthorised)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "apikey",
+												"value": "{{kong-api-key}}",
+												"type": "text"
+											},
+											{
+												"key": "platform",
+												"value": "web",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"admin@sharpsell.ai\",\n    \"password\": \"Test@1sdsd23!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE-URL}}/core/v1/login",
+											"host": [
+												"{{BASE-URL}}"
+											],
+											"path": [
+												"core",
+												"v1",
+												"login"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "X-Correlation-Id",
+											"value": "7e4cd6ca-7549-11ed-9c13-18c04ddd82c1"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 06 Dec 2022 09:36:43 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "71"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": false,\n    \"data\": {\n        \"code\": 401,\n        \"message\": \"5 login attempts left\"\n    }\n}"
+								},
+								{
+									"name": "Login 404 (user not found)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "apikey",
+												"value": "{{kong-api-key}}",
+												"type": "text"
+											},
+											{
+												"key": "platform",
+												"value": "web",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"adsdsmin@sharpsell.ai\",\n    \"password\": \"Test@1sdsd23!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE-URL}}/core/v1/login",
+											"host": [
+												"{{BASE-URL}}"
+											],
+											"path": [
+												"core",
+												"v1",
+												"login"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "X-Correlation-Id",
+											"value": "9469e7e4-7549-11ed-9c13-18c04ddd82c1"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 06 Dec 2022 09:37:20 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "64"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": false,\n    \"data\": {\n        \"code\": 404,\n        \"message\": \"User Not Found\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Get User Profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test (\"C11 Received response with valid schema\", function() {",
+											"    ",
+											"    var response = pm.response.json();",
+											"    var status = pm.response.code;",
+											"",
+											"    pm.response.to.have.status(200);",
+											"    pm.expect(response).to.have.jsonSchema(responseSchema);",
+											"    ",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Core-Service-API-Key",
+										"value": "6-d86e58ad-435a-47e8-8ce7-f9d3d6b969e5",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apikey",
+										"value": "{{kong-api-key}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE-URL}}/v1/user?include=home_screen_layout,active_plugins,meta_rules",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"user"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "home_screen_layout,active_plugins,meta_rules"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test (\"C11 Log out successful.\", function() {",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.message).to.eql(\"logout successfully\");",
+											"",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE-URL}}/v1/logout",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User Updation Flows",
+					"item": [
+						{
+							"name": "Get Email OTP",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{kong-api-key}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{appuser_email}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE-URL}}/v1/get-otp",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"get-otp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"C13 Successful Admin Login\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+											"    ",
+											"    pm.environment.set(\"appuser_accesstoken\", pm.response.json().data.access_token);",
+											"    pm.environment.set(\"appuser_refreshtoken\", pm.response.json().data.refresh_token);",
+											"    console.log(pm.response.json().data.access_token);",
+											"});",
+											"",
+											"checkQueryParam();",
+											"",
+											"function checkQueryParam() {",
+											"",
+											"    if (pm.request.url.query.count() != 0) {",
+											"        const queryParamInclude = pm.request.url.query.idx(0).key;",
+											"        const tempVal = pm.request.url.query.idx(0).value;",
+											"        const queryParamIncludeVal = tempVal.split(',');",
+											"        const response = pm.response.json();",
+											"",
+											"        if (queryParamIncludeVal.includes(\"home_screen_layout\")) {",
+											"            pm.test (\"Expected Home Screen Layout\", function () {",
+											"                pm.expect(response.hasOwnProperty('home_screen_layout'));",
+											"                pm.expect(Object.keys(response.data.home_screen_layout)).to.not.equal(0);",
+											"            });",
+											"        }",
+											"",
+											"        if (queryParamIncludeVal.includes(\"active_plugins\")) {",
+											"            pm.test (\"Expected Active Plugins\", function () {",
+											"                pm.expect(response.hasOwnProperty('active_plugins'));",
+											"                pm.expect(Object.keys(response.data.active_plugins)).to.not.equal(0);",
+											"            });",
+											"        }",
+											"",
+											"        if (queryParamIncludeVal.includes(\"meta_rules\")) {",
+											"            pm.test (\"Expected User Meta Rules\", function () {",
+											"                pm.expect(response.hasOwnProperty('meta_rules'));",
+											"                pm.expect(Object.keys(response.data.meta_rules)).to.not.equal(0);",
+											"            });",
+											"        }",
+											"",
+											"        console.log (\"Key: \", queryParamInclude);",
+											"        console.log (\"Value: \", tempVal);",
+											"        console.log (\"Value Array: \", queryParamIncludeVal);",
+											"    }",
+											"    else {",
+											"        console.log (\"No Query Params\");",
+											"    }",
+											"}",
+											"",
+											"pm.test (\"C13 Valid access token\", function() {",
+											"",
+											"    var jsonData = pm.response.json().data;",
+											"    pm.environment.set(\"jwt_token\", jsonData.access_token);",
+											"",
+											"    function parseJwt (token,part) {",
+											"    var base64Url = token.split('.')[part];",
+											"    var words = CryptoJS.enc.Base64.parse(base64Url);",
+											"    var jsonPayload = CryptoJS.enc.Utf8.stringify(words);",
+											"    return  JSON.parse(jsonPayload);",
+											"    };",
+											"",
+											"    var jwtInfo ={};",
+											"    jwtInfo.size = jsonData.access_token.length;",
+											"    jwtInfo.header = parseJwt(jsonData.access_token,0);",
+											"    jwtInfo.payload = parseJwt(jsonData.access_token,1);",
+											"    jwtInfo.signature = jsonData.access_token.split('.')[2];",
+											"    jwtInfo.expires = ((jwtInfo.payload.exp-Date.now().valueOf()/1000)/60).toFixed(1);",
+											"    console.log(jwtInfo);",
+											"",
+											"    pm.globals.set(\"decoded_Token\",jwtInfo);",
+											"    ",
+											"});",
+											"",
+											"pm.test (\"C13 User has the role app-user\", function () {",
+											"    var payload = pm.globals.get(\"decoded_Token\").payload.roles;",
+											"    pm.expect(payload).to.include(\"app-user\");",
+											"});",
+											"",
+											"pm.test (\"C13 Valid user object found in token\", function() {",
+											"    var user = pm.globals.get(\"decoded_Token\").payload.user;",
+											"    var expectedMob = pm.globals.get(\"appuser_mobile\");",
+											"    console.log(\"Mobile: \",expectedMob);",
+											"    pm.expect(user.phone).to.eql(expectedMob);",
+											"    pm.expect(user.email).to.eql(pm.globals.get(\"appuser_email\"));",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "platform",
+										"value": "web",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{appuser_email}}\",\n    \"otp\": \"654321\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE-URL}}/v1/login?include=home_screen_layout,active_plugins,meta_rules",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"login"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "home_screen_layout,active_plugins,meta_rules"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Login OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "apikey",
+												"value": "{{kong-api-key}}",
+												"type": "text"
+											},
+											{
+												"key": "platform",
+												"value": "web",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"admin@sharpsell.ai\",\n    \"password\": \"Test@123!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE-URL}}/v1/login",
+											"host": [
+												"{{BASE-URL}}"
+											],
+											"path": [
+												"v1",
+												"login"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "X-Correlation-Id",
+											"value": "bebef120-753d-11ed-9e08-18c04ddd82c1"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 06 Dec 2022 08:12:44 GMT"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"message\": \"user successfully login\",\n    \"data\": {\n        \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IiIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTY3MDUzMDM2NCwiaGFzdXJhIjp7ImNsYWltcyI6eyJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInN1cGVyLWFkbWluIiwiYXBwLXVzZXIiLCJlZGl0b3IiLCJhZG1pbiJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJhcHAtdXNlciIsIngtaGFzdXJhLXJvbGUiOiJzdXBlci1hZG1pbiIsIngtaGFzdXJhLXVzZXItaWQiOiIxIn19LCJwbGF0Zm9ybSI6IndlYiIsInJvbGUiOlsic3VwZXItYWRtaW4iXSwidXNlciI6eyJpZCI6MSwiZmlyc3RfbmFtZSI6IlNoYXJwc2VsbCIsImxhc3RfbmFtZSI6IkFkbWluIiwic2lnbmF0dXJlIjpudWxsLCJmY20iOm51bGwsImFwbiI6bnVsbCwid2ViX2ZjbSI6bnVsbCwicHJvZmlsZV9pbWFnZV91cmwiOm51bGwsImxvZ2luX2F0dGVtcHRzIjowLCJjb3VudHJ5X2NvZGUiOiIrOTEiLCJkZXNpZ25hdGlvbiI6bnVsbCwicmVwb3J0aW5nX3RvIjpudWxsLCJleHRlcm5hbF91bmlxdWVfaWQiOm51bGwsImlzX3JlZ2lzdGVyZWQiOmZhbHNlLCJpc19hY3RpdmUiOnRydWUsImludml0ZWRfYXQiOm51bGwsImVtYWlsIjoiYWRtaW5Ac2hhcnBzZWxsLmFpIiwiZW1haWxfY29uZmlybWVkX2F0IjpudWxsLCJsYXN0X3NpZ25faW5fYXQiOm51bGwsInVzZXJfbWV0YV9kYXRhIjpudWxsLCJwaG9uZSI6bnVsbCwicGhvbmVfY29uZmlybWVkX2F0IjpudWxsLCJiYW5uZWRfYXQiOm51bGwsImJhbm5lZF91bnRpbCI6bnVsbCwiY3JlYXRlZF9hdCI6IjIwMjItMTItMDZUMDg6MTI6MzMuNDgyODQ5WiIsInVwZGF0ZWRfYXQiOiIyMDIyLTEyLTA2VDA4OjEyOjMzLjQ4Mjg0OVoiLCJyb2xlX2NvZGUiOlsic3VwZXItYWRtaW4iXSwidXNlcl9tZXRhX2RhdGFfanNvbiI6bnVsbH19.Z8yAD_dMFse_QrYqW1xzFb6oMZYoR1EOWdvtNgc2uj8\",\n        \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzAzMTYxNjQsInBsYXRmb3JtIjoid2ViIiwicmVmcmVzaF91dWlkIjoiYzMxMmJhMjYtNzUzZC0xMWVkLTllMDgtMThjMDRkZGQ4MmMxKysxIiwidXNlciI6eyJpZCI6MSwiZmlyc3RfbmFtZSI6IlNoYXJwc2VsbCIsImxhc3RfbmFtZSI6IkFkbWluIiwic2lnbmF0dXJlIjpudWxsLCJmY20iOm51bGwsImFwbiI6bnVsbCwid2ViX2ZjbSI6bnVsbCwicHJvZmlsZV9pbWFnZV91cmwiOm51bGwsImxvZ2luX2F0dGVtcHRzIjowLCJjb3VudHJ5X2NvZGUiOiIrOTEiLCJkZXNpZ25hdGlvbiI6bnVsbCwicmVwb3J0aW5nX3RvIjpudWxsLCJleHRlcm5hbF91bmlxdWVfaWQiOm51bGwsImlzX3JlZ2lzdGVyZWQiOmZhbHNlLCJpc19hY3RpdmUiOnRydWUsImludml0ZWRfYXQiOm51bGwsImVtYWlsIjoiYWRtaW5Ac2hhcnBzZWxsLmFpIiwiZW1haWxfY29uZmlybWVkX2F0IjpudWxsLCJsYXN0X3NpZ25faW5fYXQiOm51bGwsInVzZXJfbWV0YV9kYXRhIjpudWxsLCJwaG9uZSI6bnVsbCwicGhvbmVfY29uZmlybWVkX2F0IjpudWxsLCJiYW5uZWRfYXQiOm51bGwsImJhbm5lZF91bnRpbCI6bnVsbCwiY3JlYXRlZF9hdCI6IjIwMjItMTItMDZUMDg6MTI6MzMuNDgyODQ5WiIsInVwZGF0ZWRfYXQiOiIyMDIyLTEyLTA2VDA4OjEyOjMzLjQ4Mjg0OVoiLCJyb2xlX2NvZGUiOlsic3VwZXItYWRtaW4iXSwidXNlcl9tZXRhX2RhdGFfanNvbiI6bnVsbH19.R0HYNaCzp_fbh2wwblakmoVw5tjuQdbwW0js3WiQVoM\",\n        \"user\": {\n            \"id\": 1,\n            \"first_name\": \"Sharpsell\",\n            \"last_name\": \"Admin\",\n            \"signature\": null,\n            \"fcm\": null,\n            \"apn\": null,\n            \"web_fcm\": null,\n            \"profile_image_url\": null,\n            \"login_attempts\": 0,\n            \"country_code\": \"+91\",\n            \"designation\": null,\n            \"reporting_to\": null,\n            \"external_unique_id\": null,\n            \"is_registered\": false,\n            \"is_active\": true,\n            \"invited_at\": null,\n            \"email\": \"admin@sharpsell.ai\",\n            \"email_confirmed_at\": null,\n            \"last_sign_in_at\": null,\n            \"user_meta_data\": null,\n            \"phone\": null,\n            \"phone_confirmed_at\": null,\n            \"banned_at\": null,\n            \"banned_until\": null,\n            \"created_at\": \"2022-12-06T08:12:33.482849Z\",\n            \"updated_at\": \"2022-12-06T08:12:33.482849Z\",\n            \"role_code\": [\n                \"super-admin\"\n            ],\n            \"user_meta_data_json\": null\n        }\n    }\n}"
+								},
+								{
+									"name": "Login 401 (wrong password Unauthorised)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "apikey",
+												"value": "{{kong-api-key}}",
+												"type": "text"
+											},
+											{
+												"key": "platform",
+												"value": "web",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"admin@sharpsell.ai\",\n    \"password\": \"Test@1sdsd23!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE-URL}}/core/v1/login",
+											"host": [
+												"{{BASE-URL}}"
+											],
+											"path": [
+												"core",
+												"v1",
+												"login"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "X-Correlation-Id",
+											"value": "7e4cd6ca-7549-11ed-9c13-18c04ddd82c1"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 06 Dec 2022 09:36:43 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "71"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": false,\n    \"data\": {\n        \"code\": 401,\n        \"message\": \"5 login attempts left\"\n    }\n}"
+								},
+								{
+									"name": "Login 404 (user not found)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "apikey",
+												"value": "{{kong-api-key}}",
+												"type": "text"
+											},
+											{
+												"key": "platform",
+												"value": "web",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"adsdsmin@sharpsell.ai\",\n    \"password\": \"Test@1sdsd23!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE-URL}}/core/v1/login",
+											"host": [
+												"{{BASE-URL}}"
+											],
+											"path": [
+												"core",
+												"v1",
+												"login"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "X-Correlation-Id",
+											"value": "9469e7e4-7549-11ed-9c13-18c04ddd82c1"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 06 Dec 2022 09:37:20 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "64"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": false,\n    \"data\": {\n        \"code\": 404,\n        \"message\": \"User Not Found\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Get User Profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Core-Service-API-Key",
+										"value": "6-d86e58ad-435a-47e8-8ce7-f9d3d6b969e5",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apikey",
+										"value": "{{kong-api-key}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE-URL}}/v1/user?include=home_screen_layout,active_plugins,meta_rules",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"user"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "home_screen_layout,active_plugins,meta_rules"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update User Name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test (\"C13 User Name Updated Successfully\", function() {",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.message).to.eql(\"User Updated Successfully\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Core-Service-API-Key",
+										"value": "6-d86e58ad-435a-47e8-8ce7-f9d3d6b969e5",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apikey",
+										"value": "{{kong-api-key}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"Marcus\",\n    \"last_name\": \"Arelius\",\n    \"user_meta_data\": {\n        \"designation\": \"Professor\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE-URL}}/v1/user",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Profile after update",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"C13 User name updated successfully\", function() {",
+											"    const response = pm.response.json().data.user;",
+											"    pm.expect(response.first_name).to.eql(\"John\");",
+											"    pm.expect(response.last_name).to.eql(\"Doe\");",
+											"})",
+											"",
+											"pm.test(\"C13 User designation updated successfully\", function() {",
+											"    const response = pm.response.json().data.user;",
+											"    pm.expect(response.user_meta_data.designation).to.eql(\"Associate Professor\");",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Core-Service-API-Key",
+										"value": "6-d86e58ad-435a-47e8-8ce7-f9d3d6b969e5",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apikey",
+										"value": "{{kong-api-key}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE-URL}}/v1/user",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Revert User Profiel",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test (\"C13 User Name Updated Successfully\", function() {",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.message).to.eql(\"User Updated Successfully\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Core-Service-API-Key",
+										"value": "6-d86e58ad-435a-47e8-8ce7-f9d3d6b969e5",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apikey",
+										"value": "{{kong-api-key}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"Vignesh\",\n    \"last_name\": \"J\",\n    \"user_meta_data\": {\n        \"designation\": \"Programmer\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE-URL}}/v1/user",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE-URL}}/v1/logout",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Token Rotation",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"C12 Successful Admin Login\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+											"",
+											"    pm.expect(pm.response.json().data.access_token  )",
+											"    pm.environment.set(\"appuser_accesstoken\", pm.response.json().data.access_token);",
+											"    pm.environment.set(\"appuser_refreshtoken\", pm.response.json().data.refresh_token);",
+											"    console.log(pm.response.json().data.access_token);",
+											"});",
+											"",
+											"pm.test (\"C12 Valid access token\", function() {",
+											"",
+											"    var jsonData = pm.response.json().data;",
+											"    pm.environment.set(\"jwt_token\", jsonData.access_token);",
+											"",
+											"    function parseJwt (token,part) {",
+											"    var base64Url = token.split('.')[part];",
+											"    var words = CryptoJS.enc.Base64.parse(base64Url);",
+											"    var jsonPayload = CryptoJS.enc.Utf8.stringify(words);",
+											"    return  JSON.parse(jsonPayload);",
+											"    };",
+											"",
+											"    var jwtInfo ={};",
+											"    jwtInfo.size = jsonData.access_token.length;",
+											"    jwtInfo.header = parseJwt(jsonData.access_token,0);",
+											"    jwtInfo.payload = parseJwt(jsonData.access_token,1);",
+											"    jwtInfo.signature = jsonData.access_token.split('.')[2];",
+											"    jwtInfo.expires = ((jwtInfo.payload.exp-Date.now().valueOf()/1000)/60).toFixed(1);",
+											"    console.log(jwtInfo);",
+											"",
+											"    pm.globals.set(\"decoded_Token\",jwtInfo);",
+											"    ",
+											"});",
+											"",
+											"pm.test (\"C12 User has the role app-user\", function () {",
+											"    var payload = pm.globals.get(\"decoded_Token\").payload.roles;",
+											"    pm.expect(payload).to.include(\"app-user\");",
+											"});",
+											"",
+											"pm.test (\"C12 Valid user object found in token\", function() {",
+											"    var user = pm.globals.get(\"decoded_Token\").payload.user;",
+											"    var expectedMob = pm.globals.get(\"appuser_mobile\");",
+											"    console.log(\"Mobile: \",expectedMob);",
+											"    pm.expect(user.phone).to.eql(expectedMob);",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "platform",
+										"value": "web",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"phone\": \"{{appuser_mobile}}\",\n    \"otp\": \"654321\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE-URL}}/v1/login",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"login"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Login OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "apikey",
+												"value": "{{kong-api-key}}",
+												"type": "text"
+											},
+											{
+												"key": "platform",
+												"value": "web",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"admin@sharpsell.ai\",\n    \"password\": \"Test@123!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE-URL}}/v1/login",
+											"host": [
+												"{{BASE-URL}}"
+											],
+											"path": [
+												"v1",
+												"login"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "X-Correlation-Id",
+											"value": "bebef120-753d-11ed-9e08-18c04ddd82c1"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 06 Dec 2022 08:12:44 GMT"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"message\": \"user successfully login\",\n    \"data\": {\n        \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IiIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTY3MDUzMDM2NCwiaGFzdXJhIjp7ImNsYWltcyI6eyJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInN1cGVyLWFkbWluIiwiYXBwLXVzZXIiLCJlZGl0b3IiLCJhZG1pbiJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJhcHAtdXNlciIsIngtaGFzdXJhLXJvbGUiOiJzdXBlci1hZG1pbiIsIngtaGFzdXJhLXVzZXItaWQiOiIxIn19LCJwbGF0Zm9ybSI6IndlYiIsInJvbGUiOlsic3VwZXItYWRtaW4iXSwidXNlciI6eyJpZCI6MSwiZmlyc3RfbmFtZSI6IlNoYXJwc2VsbCIsImxhc3RfbmFtZSI6IkFkbWluIiwic2lnbmF0dXJlIjpudWxsLCJmY20iOm51bGwsImFwbiI6bnVsbCwid2ViX2ZjbSI6bnVsbCwicHJvZmlsZV9pbWFnZV91cmwiOm51bGwsImxvZ2luX2F0dGVtcHRzIjowLCJjb3VudHJ5X2NvZGUiOiIrOTEiLCJkZXNpZ25hdGlvbiI6bnVsbCwicmVwb3J0aW5nX3RvIjpudWxsLCJleHRlcm5hbF91bmlxdWVfaWQiOm51bGwsImlzX3JlZ2lzdGVyZWQiOmZhbHNlLCJpc19hY3RpdmUiOnRydWUsImludml0ZWRfYXQiOm51bGwsImVtYWlsIjoiYWRtaW5Ac2hhcnBzZWxsLmFpIiwiZW1haWxfY29uZmlybWVkX2F0IjpudWxsLCJsYXN0X3NpZ25faW5fYXQiOm51bGwsInVzZXJfbWV0YV9kYXRhIjpudWxsLCJwaG9uZSI6bnVsbCwicGhvbmVfY29uZmlybWVkX2F0IjpudWxsLCJiYW5uZWRfYXQiOm51bGwsImJhbm5lZF91bnRpbCI6bnVsbCwiY3JlYXRlZF9hdCI6IjIwMjItMTItMDZUMDg6MTI6MzMuNDgyODQ5WiIsInVwZGF0ZWRfYXQiOiIyMDIyLTEyLTA2VDA4OjEyOjMzLjQ4Mjg0OVoiLCJyb2xlX2NvZGUiOlsic3VwZXItYWRtaW4iXSwidXNlcl9tZXRhX2RhdGFfanNvbiI6bnVsbH19.Z8yAD_dMFse_QrYqW1xzFb6oMZYoR1EOWdvtNgc2uj8\",\n        \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzAzMTYxNjQsInBsYXRmb3JtIjoid2ViIiwicmVmcmVzaF91dWlkIjoiYzMxMmJhMjYtNzUzZC0xMWVkLTllMDgtMThjMDRkZGQ4MmMxKysxIiwidXNlciI6eyJpZCI6MSwiZmlyc3RfbmFtZSI6IlNoYXJwc2VsbCIsImxhc3RfbmFtZSI6IkFkbWluIiwic2lnbmF0dXJlIjpudWxsLCJmY20iOm51bGwsImFwbiI6bnVsbCwid2ViX2ZjbSI6bnVsbCwicHJvZmlsZV9pbWFnZV91cmwiOm51bGwsImxvZ2luX2F0dGVtcHRzIjowLCJjb3VudHJ5X2NvZGUiOiIrOTEiLCJkZXNpZ25hdGlvbiI6bnVsbCwicmVwb3J0aW5nX3RvIjpudWxsLCJleHRlcm5hbF91bmlxdWVfaWQiOm51bGwsImlzX3JlZ2lzdGVyZWQiOmZhbHNlLCJpc19hY3RpdmUiOnRydWUsImludml0ZWRfYXQiOm51bGwsImVtYWlsIjoiYWRtaW5Ac2hhcnBzZWxsLmFpIiwiZW1haWxfY29uZmlybWVkX2F0IjpudWxsLCJsYXN0X3NpZ25faW5fYXQiOm51bGwsInVzZXJfbWV0YV9kYXRhIjpudWxsLCJwaG9uZSI6bnVsbCwicGhvbmVfY29uZmlybWVkX2F0IjpudWxsLCJiYW5uZWRfYXQiOm51bGwsImJhbm5lZF91bnRpbCI6bnVsbCwiY3JlYXRlZF9hdCI6IjIwMjItMTItMDZUMDg6MTI6MzMuNDgyODQ5WiIsInVwZGF0ZWRfYXQiOiIyMDIyLTEyLTA2VDA4OjEyOjMzLjQ4Mjg0OVoiLCJyb2xlX2NvZGUiOlsic3VwZXItYWRtaW4iXSwidXNlcl9tZXRhX2RhdGFfanNvbiI6bnVsbH19.R0HYNaCzp_fbh2wwblakmoVw5tjuQdbwW0js3WiQVoM\",\n        \"user\": {\n            \"id\": 1,\n            \"first_name\": \"Sharpsell\",\n            \"last_name\": \"Admin\",\n            \"signature\": null,\n            \"fcm\": null,\n            \"apn\": null,\n            \"web_fcm\": null,\n            \"profile_image_url\": null,\n            \"login_attempts\": 0,\n            \"country_code\": \"+91\",\n            \"designation\": null,\n            \"reporting_to\": null,\n            \"external_unique_id\": null,\n            \"is_registered\": false,\n            \"is_active\": true,\n            \"invited_at\": null,\n            \"email\": \"admin@sharpsell.ai\",\n            \"email_confirmed_at\": null,\n            \"last_sign_in_at\": null,\n            \"user_meta_data\": null,\n            \"phone\": null,\n            \"phone_confirmed_at\": null,\n            \"banned_at\": null,\n            \"banned_until\": null,\n            \"created_at\": \"2022-12-06T08:12:33.482849Z\",\n            \"updated_at\": \"2022-12-06T08:12:33.482849Z\",\n            \"role_code\": [\n                \"super-admin\"\n            ],\n            \"user_meta_data_json\": null\n        }\n    }\n}"
+								},
+								{
+									"name": "Login 401 (wrong password Unauthorised)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "apikey",
+												"value": "{{kong-api-key}}",
+												"type": "text"
+											},
+											{
+												"key": "platform",
+												"value": "web",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"admin@sharpsell.ai\",\n    \"password\": \"Test@1sdsd23!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE-URL}}/core/v1/login",
+											"host": [
+												"{{BASE-URL}}"
+											],
+											"path": [
+												"core",
+												"v1",
+												"login"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "X-Correlation-Id",
+											"value": "7e4cd6ca-7549-11ed-9c13-18c04ddd82c1"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 06 Dec 2022 09:36:43 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "71"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": false,\n    \"data\": {\n        \"code\": 401,\n        \"message\": \"5 login attempts left\"\n    }\n}"
+								},
+								{
+									"name": "Login 404 (user not found)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "apikey",
+												"value": "{{kong-api-key}}",
+												"type": "text"
+											},
+											{
+												"key": "platform",
+												"value": "web",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"adsdsmin@sharpsell.ai\",\n    \"password\": \"Test@1sdsd23!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE-URL}}/core/v1/login",
+											"host": [
+												"{{BASE-URL}}"
+											],
+											"path": [
+												"core",
+												"v1",
+												"login"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "X-Correlation-Id",
+											"value": "9469e7e4-7549-11ed-9c13-18c04ddd82c1"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 06 Dec 2022 09:37:20 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "64"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": false,\n    \"data\": {\n        \"code\": 404,\n        \"message\": \"User Not Found\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Get User Profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"C12 User Profile Retrieved\", function () {",
+											"    var response = pm.response.json();",
+											"    var expected_mobile = pm.globals.get(\"appuser_mobile\");",
+											"",
+											"    console.log(\"Expected Mobile: \",expected_mobile);",
+											"",
+											"    pm.response.to.have.status(200);",
+											"    pm.expect(response.data.user.phone).to.equal(expected_mobile);",
+											"});",
+											"",
+											"pm.test (\"C12 User has the role app-user\", function () {",
+											"    pm.expect(pm.response.json().data.user.roles)",
+											"        .to.include(\"app-user\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE-URL}}/v1/user",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"C12 Successful Token Refresh\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+											"",
+											"    pm.environment.set(\"appuser_accesstoken\", pm.response.json().data.access_token);",
+											"    pm.environment.set(\"appuser_refreshtoken\", pm.response.json().data.refresh_token);",
+											"",
+											"    console.log(pm.response.json().data.access_token);",
+											"});",
+											"",
+											"pm.test(\"C12 Refresh Token Changed Successfully\", function () {",
+											"    var newToken = pm.response.json().data.refresh_token;",
+											"    var oldToken = pm.environment.get(\"Refresh-Token\");",
+											"    pm.expect(oldToken != newToken);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"refresh_token\": \"{{appuser_refreshtoken}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE-URL}}/v1/refresh",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Profile with New Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"C12 Admin Profile Retrieved\", function () {",
+											"    var response = pm.response.json();",
+											"    var expected_mobile = pm.globals.get(\"appuser_mobile\");",
+											"",
+											"    console.log(\"Expected Mobile: \",expected_mobile);",
+											"",
+											"    pm.response.to.have.status(200);",
+											"    pm.expect(response.data.user.phone).to.equal(expected_mobile);",
+											"",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE-URL}}/v1/user?include=home_screen_layout,active_plugins,meta_rules",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"user"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "home_screen_layout,active_plugins,meta_rules"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"C12 Successful Logout\", function () {",
+											"    var response = pm.response.json();",
+											"",
+											"    pm.response.to.have.status(200);",
+											"    pm.expect(response.message).to.equal(\"logout successfully\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{appuser_accesstoken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE-URL}}/v1/logout",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Company and Branding",
+					"item": [
+						{
+							"name": "Fetch Company",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test (\"C14 Company details received\", function() {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+											"})",
+											"",
+											"pm.test (\"C14 Global configurations available\", function() {",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.hasOwnProperty('is_profile_image_disclaimer_enabled'));",
+											"    pm.expect(response.hasOwnProperty('is_screenshot_enabled'));",
+											"})",
+											"",
+											"pm.test (\"C14 Default app login type configured\", function() {",
+											"    const loginTypes = pm.response.json().data.app_login;",
+											"    console.log (\"Login Types: \", loginTypes);",
+											"",
+											"    const defaultLoginType = loginTypes.filter (loginType => loginType.is_default == true);",
+											"    console.log (\"Default Login Type: \", defaultLoginType);",
+											"",
+											"     pm.expect(defaultLoginType).not.empty;",
+											"     pm.expect(defaultLoginType[0].is_enable).to.eql(true);",
+											"})",
+											"",
+											"pm.test (\"C14 Valid branding available\", function() {",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.hasOwnProperty('branding'));",
+											"    pm.expect(response.hasOwnProperty('company_colors'));",
+											"    pm.expect(response.hasOwnProperty('fonts'));",
+											"    pm.expect(response.hasOwnProperty('icon_config'));",
+											"",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "apikey",
+										"value": "{{kong-api-key}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE-URL}}/v1/company?include=app_login,branding",
+									"host": [
+										"{{BASE-URL}}"
+									],
+									"path": [
+										"v1",
+										"company"
+									],
+									"query": [
+										{
+											"key": "include",
+											"value": "app_login,branding"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Healthcheck",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful Logout\", function () {",
+							"    var response = pm.response.json();",
+							"",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    pm.globals.set(\"core_service_version\", response.data.version);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE-URL}}/v1/healthcheck",
+					"host": [
+						"{{BASE-URL}}"
+					],
+					"path": [
+						"v1",
+						"healthcheck"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{Access-Token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"responseSchema = {",
+					"    \"type\": \"object\",",
+					"    \"properties\": {",
+					"        \"success\": {\"type\": \"boolean\"},",
+					"        \"message\": {\"type\": \"string\"},",
+					"        \"data\": {",
+					"            \"type\": \"object\"",
+					"        }",
+					"    },",
+					"    \"required\": [\"success\", \"message\"]",
+					"};",
+					"",
+					"errorSchema = {",
+					"    \"type\": \"object\",",
+					"    \"properties\": {",
+					"        \"success\": {\"type\": \"boolean\"},",
+					"        \"message\": {\"type\": \"string\"}",
+					"    },",
+					"    \"required\": [\"success\", \"message\"]",
+					"};"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

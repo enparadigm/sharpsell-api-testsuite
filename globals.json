@@ -1,0 +1,175 @@
+{
+	"id": "c97fbea1-2d83-401d-8b63-21f4334206b2",
+	"values": [
+		{
+			"key": "admin_email",
+			"value": "vignesh.babu@sharpsell.ai",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "admin_password",
+			"value": "Pass@123!",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "core_service_version",
+			"value": "0.0.2",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "password_rotation",
+			"value": "Test@123!",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "appuser_mobile",
+			"value": "9606314748",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "appuser_accesstoken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IiIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTY3MTE2MjEyNiwiaGFzdXJhIjp7ImNsYWltcyI6eyJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInN1cGVyLWFkbWluIiwiYXBwLXVzZXIiLCJlZGl0b3IiLCJhZG1pbiJdLCJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJhcHAtdXNlciIsIngtaGFzdXJhLXJvbGUiOiJhcHAtdXNlciIsIngtaGFzdXJhLXVzZXItaWQiOiJmOTUxZDE4Yy03YWQ4LTExZWQtOWVkZi0wYWM3ZDFmNWZlMjQifX0sInBsYXRmb3JtIjoid2ViIiwicm9sZXMiOlsiYXBwLXVzZXIiXSwidXNlciI6eyJpZCI6ImY5NTFkMThjLTdhZDgtMTFlZC05ZWRmLTBhYzdkMWY1ZmUyNCIsImZpcnN0X25hbWUiOiJWaWduZXNoIiwibGFzdF9uYW1lIjoiSiIsInByb2ZpbGVfaW1hZ2VfdXJsIjoiaHR0cHM6Ly9pbWd1ci5jb20vVDlIYVV0biIsImNvdW50cnlfY29kZSI6IiIsImRlc2lnbmF0aW9uIjoiIiwicmVwb3J0aW5nX3RvIjpudWxsLCJleHRlcm5hbF91bmlxdWVfaWQiOm51bGwsImVtYWlsIjoianZpZ25lc2hiYWJ1QGdtYWlsLmNvbSIsInVzZXJfbWV0YV9kYXRhIjpudWxsLCJwaG9uZSI6Ijk2MDYzMTQ3NDgiLCJyb2xlcyI6WyJhcHAtdXNlciJdfX0.u6wlqW592UmC7gJgZhtNLU7Asp9TTzGxeb8HMSLN224",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "appuser_refreshtoken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzExNjMwMjYsInBsYXRmb3JtIjoid2ViIiwicmVmcmVzaF91dWlkIjoiODQ0NjFkYmYtN2NmMS0xMWVkLWI4ZDMtZWVkZWEyZDNjMzVkKytmOTUxZDE4Yy03YWQ4LTExZWQtOWVkZi0wYWM3ZDFmNWZlMjQiLCJ1c2VyIjp7ImlkIjoiZjk1MWQxOGMtN2FkOC0xMWVkLTllZGYtMGFjN2QxZjVmZTI0IiwiZmlyc3RfbmFtZSI6IlZpZ25lc2giLCJsYXN0X25hbWUiOiJKIiwicHJvZmlsZV9pbWFnZV91cmwiOiJodHRwczovL2ltZ3VyLmNvbS9UOUhhVXRuIiwiY291bnRyeV9jb2RlIjoiIiwiZGVzaWduYXRpb24iOiIiLCJyZXBvcnRpbmdfdG8iOm51bGwsImV4dGVybmFsX3VuaXF1ZV9pZCI6bnVsbCwiZW1haWwiOiJqdmlnbmVzaGJhYnVAZ21haWwuY29tIiwidXNlcl9tZXRhX2RhdGEiOm51bGwsInBob25lIjoiOTYwNjMxNDc0OCIsInJvbGVzIjpbImFwcC11c2VyIl19fQ.UrDBC615WlAh-vDawLmJh54yYS2Zvr5GBPIu6c3z-AM",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "admin_mobile",
+			"value": "9606314748",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "master_admin_email",
+			"value": "admin@sharpsell.ai",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "master_admin_pass",
+			"value": "Test@123!",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "admin_email_otp",
+			"value": "no",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "admin_phone_password",
+			"value": "no",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "user_email_otp",
+			"value": "no",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "user_phone_password",
+			"value": "no",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "admin_otp",
+			"value": "654321",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "decoded_Token",
+			"value": {
+				"size": 960,
+				"header": {
+					"alg": "HS256",
+					"typ": "JWT"
+				},
+				"payload": {
+					"access_uuid": "00000000-0000-0000-0000-000000000000",
+					"authorized": true,
+					"exp": 1671940574,
+					"hasura": {
+						"claims": {
+							"x-hasura-allowed-roles": [
+								"super-admin",
+								"app-user",
+								"editor",
+								"admin"
+							],
+							"x-hasura-default-role": "app-user",
+							"x-hasura-role": "app-user",
+							"x-hasura-user-id": "f951d18c-7ad8-11ed-9edf-0ac7d1f5fe24"
+						}
+					},
+					"platform": "web",
+					"roles": [
+						"app-user"
+					],
+					"user": {
+						"id": "f951d18c-7ad8-11ed-9edf-0ac7d1f5fe24",
+						"first_name": "Vignesh",
+						"last_name": "J",
+						"profile_image_url": "https://imgur.com/T9HaUtn",
+						"country_code": "",
+						"designation": "def",
+						"reporting_to": null,
+						"external_unique_id": null,
+						"email": "jvigneshbabu@gmail.com",
+						"user_meta_data": null,
+						"phone": "9606314748",
+						"roles": [
+							"app-user"
+						]
+					}
+				},
+				"signature": "exBTintL6nw2DCBjnESs3FVGbBsrAN993sROOWvKkOc",
+				"expires": "15.0"
+			},
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "appuser_email",
+			"value": "jvigneshbabu@gmail.com",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "homeScreenLayout",
+			"value": "{}",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "activePlugins",
+			"value": "[]",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "metarules",
+			"value": "[]",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2023-01-04T05:45:00.565Z",
+	"_postman_exported_using": "Postman/10.6.7"
+}
