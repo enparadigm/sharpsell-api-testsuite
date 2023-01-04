@@ -8,6 +8,12 @@ on:
       - main
 
     tags: ["*"]
+env:
+  TESTRAIL_USERNAME: vignesh.babu@sharpsell.ai
+  TESTRAIL_APIKEY: z3jAqqBzglccwqVrsYQd-5B1kE1BGaDVbSc.FsTpa
+  TESTRAIL_DOMAIN: sharpsell.testrail.com
+  TESTRAIL_PROJECTID: 1
+  TESTRAIL_SUITEID: 1
     
 jobs:
   newman:
