@@ -10,8 +10,8 @@ on:
     tags: ["*"]
     
 jobs:
-  golangci:
-    name: lint
+  newman:
+    name: API Test Workflow
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v3
