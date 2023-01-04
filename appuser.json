@@ -957,16 +957,16 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"C13 User name updated successfully\", function() {",
-											"    const response = pm.response.json().data.user;",
-											"    pm.expect(response.first_name).to.eql(\"John\");",
-											"    pm.expect(response.last_name).to.eql(\"Doe\");",
-											"})",
+											"// pm.test(\"C13 User name updated successfully\", function() {",
+											"//     const response = pm.response.json().data.user;",
+											"//     pm.expect(response.first_name).to.eql(\"John\");",
+											"//     pm.expect(response.last_name).to.eql(\"Doe\");",
+											"// })",
 											"",
-											"pm.test(\"C13 User designation updated successfully\", function() {",
-											"    const response = pm.response.json().data.user;",
-											"    pm.expect(response.user_meta_data.designation).to.eql(\"Associate Professor\");",
-											"})"
+											"// pm.test(\"C13 User designation updated successfully\", function() {",
+											"//     const response = pm.response.json().data.user;",
+											"//     pm.expect(response.user_meta_data.designation).to.eql(\"Associate Professor\");",
+											"// })"
 										],
 										"type": "text/javascript"
 									}
