@@ -1,13 +1,12 @@
 name: api-test
 on:
-  pull_request:
-    branches:
-      - main
-  push:
-    branches:
-      - main
-
-    tags: ["*"]
+  workflow_dispatch:
+    inputs:
+        tenent:
+          description: 'Company Name'
+          required: true
+          default: 'sharpsell'
+          
 env:
   TESTRAIL_USERNAME: vignesh.babu@sharpsell.ai
   TESTRAIL_APIKEY: z3jAqqBzglccwqVrsYQd-5B1kE1BGaDVbSc.FsTpa
